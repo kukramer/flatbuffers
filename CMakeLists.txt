@@ -18,6 +18,11 @@ option(FLATBUFFERS_BUILD_GRPCTEST "Enable the build of grpctest" OFF)
 option(FLATBUFFERS_BUILD_SHAREDLIB
        "Enable the build of the flatbuffers shared library"
        OFF)
+       
+option(FLATBUFFERS_STATIC_PIC
+       "Enable 'POSITION_INDEPENDENT_CODE' when building static library"
+       OFF)
+       
 option(FLATBUFFERS_LIBCXX_WITH_CLANG "Force libc++ when using Clang" ON)
 # NOTE: Sanitizer check only works on Linux & OSX (gcc & llvm).
 option(FLATBUFFERS_CODE_SANITIZE
@@ -275,6 +280,10 @@ if(FLATBUFFERS_BUILD_FLATLIB)
   target_include_directories(flatbuffers INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>)
   target_compile_options(flatbuffers PRIVATE "${FLATBUFFERS_PRIVATE_CXX_FLAGS}")
+  
+  if(FLATBUFFERS_STATIC_PIC)
+    set_property(TARGET flatbuffers PROPERTY POSITION_INDEPENDENT_CODE ON)
+  endif()
 endif()
 
 if(FLATBUFFERS_BUILD_FLATC)
